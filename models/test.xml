@@ -1,0 +1,612 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.5//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_5.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+int gate = 0;
+int reward = 0;
+int penalty = 0;
+
+clock time;</declaration>
+	<template>
+		<name x="5" y="5">Maze</name>
+		<declaration>// Place local declarations here.
+clock t;
+</declaration>
+		<location id="id0" x="204" y="170" color="#ff0000">
+			<name x="194" y="136">E2</name>
+			<urgent/>
+		</location>
+		<location id="id1" x="204" y="0" color="#00ff00">
+			<name x="194" y="-34">Goal</name>
+			<urgent/>
+		</location>
+		<location id="id2" x="204" y="-170" color="#ff0000">
+			<name x="194" y="-204">E1</name>
+			<urgent/>
+		</location>
+		<location id="id3" x="34" y="170">
+			<name x="24" y="136">S4</name>
+			<label kind="invariant" x="24" y="187">t&lt;=1</label>
+		</location>
+		<location id="id4" x="34" y="0">
+			<name x="24" y="-34">S3</name>
+			<label kind="invariant" x="24" y="17">t&lt;=1</label>
+		</location>
+		<location id="id5" x="34" y="-170">
+			<name x="24" y="-204">S2</name>
+			<label kind="invariant" x="24" y="-153">t&lt;=1</label>
+		</location>
+		<location id="id6" x="-136" y="0">
+			<name x="-146" y="-34">S1</name>
+			<urgent/>
+		</location>
+		<location id="id7" x="-340" y="0">
+			<name x="-374" y="-25">S0</name>
+			<urgent/>
+		</location>
+		<init ref="id7"/>
+		<transition controllable="false">
+			<source ref="id1"/>
+			<target ref="id7"/>
+			<label kind="assignment" x="-322" y="238">reward=10,t=0</label>
+			<nail x="238" y="0"/>
+			<nail x="238" y="238"/>
+			<nail x="-340" y="238"/>
+		</transition>
+		<transition controllable="false">
+			<source ref="id0"/>
+			<target ref="id7"/>
+			<label kind="assignment" x="-322" y="204">penalty=10,t=0</label>
+			<nail x="204" y="204"/>
+			<nail x="-340" y="204"/>
+		</transition>
+		<transition controllable="false">
+			<source ref="id2"/>
+			<target ref="id7"/>
+			<label kind="assignment" x="-322" y="-238">penalty=10,t=0</label>
+			<nail x="204" y="-238"/>
+			<nail x="-340" y="-238"/>
+		</transition>
+		<transition controllable="false">
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="guard" x="51" y="144">t&gt;=1</label>
+		</transition>
+		<transition controllable="false">
+			<source ref="id5"/>
+			<target ref="id1"/>
+			<label kind="guard" x="51" y="-102">t&gt;=1</label>
+		</transition>
+		<transition controllable="false">
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="guard" x="51" y="68">t&gt;=1</label>
+		</transition>
+		<transition controllable="false">
+			<source ref="id4"/>
+			<target ref="id1"/>
+			<label kind="guard" x="51" y="-25">t&gt;=1</label>
+		</transition>
+		<transition controllable="false">
+			<source ref="id5"/>
+			<target ref="id2"/>
+			<label kind="guard" x="51" y="-195">t&gt;=1</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id3"/>
+			<label kind="guard" x="-68" y="76">gate&gt;50&amp;&amp;
+gate&lt;=100</label>
+			<label kind="assignment" x="-68" y="119">reward=0,
+penalty=0</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-68" y="-42">gate&gt;=2&amp;&amp;
+gate&lt;=60</label>
+			<label kind="assignment" x="-68" y="0">reward=0,
+penalty=0</label>
+		</transition>
+		<transition>
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-68" y="-136">gate&lt;=2</label>
+			<label kind="assignment" x="-68" y="-119">reward=0,
+penalty=0</label>
+		</transition>
+		<transition controllable="false">
+			<source ref="id7"/>
+			<target ref="id6"/>
+			<label kind="select" x="-314" y="-51">i:int[0,100]</label>
+			<label kind="assignment" x="-314" y="-25">gate=i</label>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Ron = Maze();
+// List one or more processes to be composed into a system.
+system Ron;
+</system>
+	<queries>
+		<option key="--diagnostic" value="0"/>
+		<option key="--learning-method" value="-1"/>
+		<option key="--good-runs" value="5"/>
+		<option key="--total-runs" value="5"/>
+		<option key="--runs-pr-state" value="5"/>
+		<option key="--eval-runs" value="5"/>
+		<query>
+			<formula>strategy policy = maxE(reward - penalty)[&lt;=10]{Ron.location,gate}-&gt;{}:&lt;&gt; time&gt;=10
+</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-01-29 14:02:36 +0100">
+				<option key="--search-order" value="0"/>
+				<option key="--statespace-consumption" value="1"/>
+				<option key="--diagnostic" value="0"/>
+				<option key="--backwards-order" value="1"/>
+				<option key="--priority-order" value="0"/>
+				<option key="--generate-strategy" value="2"/>
+				<option key="--extrapolation" value="0"/>
+				<option key="--hashtable-size" value="27"/>
+				<option key="--filter" value="0"/>
+				<option key="--learning-method" value="-1"/>
+				<option key="--good-runs" value="5"/>
+				<option key="--total-runs" value="5"/>
+				<option key="--runs-pr-state" value="5"/>
+				<option key="--eval-runs" value="5"/>
+				<option key="--max-iterations" value="30"/>
+				<option key="--max-imitation" value="5"/>
+				<option key="--reset-no-better" value="10"/>
+				<option key="--max-reset-learning" value="3"/>
+				<option key="--qlearning-alpha" value="2"/>
+				<option key="--split-upper-t" value="1.75"/>
+				<option key="--split-lower-t" value="0.15"/>
+				<option key="--split-ks" value="0.25"/>
+				<option key="--split-filter-rate" value="0.02"/>
+				<option key="--split-filter-val" value="0.99"/>
+				<option key="--discount" value="0.99"/>
+				<option key="--random-search-limit" value="0.5"/>
+				<option key="--deterministic-search-limit" value="0.5"/>
+				<option key="--indifference-scale" value="0.005"/>
+				<option key="--indifference-smoothing" value="10"/>
+				<option key="--lower-delta" value="0.01"/>
+				<option key="--upper-delta" value="0.01"/>
+				<option key="--alpha" value="0.05"/>
+				<option key="--beta" value="0.05"/>
+				<option key="--epsilon" value="0.05"/>
+				<option key="--u0" value="0.9"/>
+				<option key="--u1" value="1.1"/>
+				<option key="--histogram-bar-width" value="0.0"/>
+				<option key="--histogram-bar-count" value="0"/>
+				<option key="--resolution" value="4000"/>
+				<option key="--discretization" value="0.01"/>
+				<option key="--truncation-error" value="0.01"/>
+				<option key="--truncation-time-error" value="0.01"/>
+			</result>
+		</query>
+		<query>
+			<formula>saveStrategy("../strategies/policy.out", policy)</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-01-29 14:02:38 +0100">
+				<option key="--search-order" value="0"/>
+				<option key="--statespace-consumption" value="1"/>
+				<option key="--diagnostic" value="0"/>
+				<option key="--backwards-order" value="1"/>
+				<option key="--priority-order" value="0"/>
+				<option key="--generate-strategy" value="2"/>
+				<option key="--extrapolation" value="0"/>
+				<option key="--hashtable-size" value="27"/>
+				<option key="--filter" value="0"/>
+				<option key="--learning-method" value="-1"/>
+				<option key="--good-runs" value="5"/>
+				<option key="--total-runs" value="5"/>
+				<option key="--runs-pr-state" value="5"/>
+				<option key="--eval-runs" value="5"/>
+				<option key="--max-iterations" value="30"/>
+				<option key="--max-imitation" value="5"/>
+				<option key="--reset-no-better" value="10"/>
+				<option key="--max-reset-learning" value="3"/>
+				<option key="--qlearning-alpha" value="2"/>
+				<option key="--split-upper-t" value="1.75"/>
+				<option key="--split-lower-t" value="0.15"/>
+				<option key="--split-ks" value="0.25"/>
+				<option key="--split-filter-rate" value="0.02"/>
+				<option key="--split-filter-val" value="0.99"/>
+				<option key="--discount" value="0.99"/>
+				<option key="--random-search-limit" value="0.5"/>
+				<option key="--deterministic-search-limit" value="0.5"/>
+				<option key="--indifference-scale" value="0.005"/>
+				<option key="--indifference-smoothing" value="10"/>
+				<option key="--lower-delta" value="0.01"/>
+				<option key="--upper-delta" value="0.01"/>
+				<option key="--alpha" value="0.05"/>
+				<option key="--beta" value="0.05"/>
+				<option key="--epsilon" value="0.05"/>
+				<option key="--u0" value="0.9"/>
+				<option key="--u1" value="1.1"/>
+				<option key="--histogram-bar-width" value="0.0"/>
+				<option key="--histogram-bar-count" value="0"/>
+				<option key="--resolution" value="4000"/>
+				<option key="--discretization" value="0.01"/>
+				<option key="--truncation-error" value="0.01"/>
+				<option key="--truncation-time-error" value="0.01"/>
+			</result>
+		</query>
+		<query>
+			<formula>A[] !deadlock under policy</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-01-29 14:02:48 +0100">
+				<option key="--search-order" value="0"/>
+				<option key="--statespace-consumption" value="1"/>
+				<option key="--diagnostic" value="0"/>
+				<option key="--backwards-order" value="1"/>
+				<option key="--priority-order" value="0"/>
+				<option key="--generate-strategy" value="2"/>
+				<option key="--extrapolation" value="0"/>
+				<option key="--hashtable-size" value="27"/>
+				<option key="--filter" value="0"/>
+				<option key="--learning-method" value="-1"/>
+				<option key="--good-runs" value="5"/>
+				<option key="--total-runs" value="5"/>
+				<option key="--runs-pr-state" value="5"/>
+				<option key="--eval-runs" value="5"/>
+				<option key="--max-iterations" value="30"/>
+				<option key="--max-imitation" value="5"/>
+				<option key="--reset-no-better" value="10"/>
+				<option key="--max-reset-learning" value="3"/>
+				<option key="--qlearning-alpha" value="2"/>
+				<option key="--split-upper-t" value="1.75"/>
+				<option key="--split-lower-t" value="0.15"/>
+				<option key="--split-ks" value="0.25"/>
+				<option key="--split-filter-rate" value="0.02"/>
+				<option key="--split-filter-val" value="0.99"/>
+				<option key="--discount" value="0.99"/>
+				<option key="--random-search-limit" value="0.5"/>
+				<option key="--deterministic-search-limit" value="0.5"/>
+				<option key="--indifference-scale" value="0.005"/>
+				<option key="--indifference-smoothing" value="10"/>
+				<option key="--lower-delta" value="0.01"/>
+				<option key="--upper-delta" value="0.01"/>
+				<option key="--alpha" value="0.05"/>
+				<option key="--beta" value="0.05"/>
+				<option key="--epsilon" value="0.05"/>
+				<option key="--u0" value="0.9"/>
+				<option key="--u1" value="1.1"/>
+				<option key="--histogram-bar-width" value="0.0"/>
+				<option key="--histogram-bar-count" value="0"/>
+				<option key="--resolution" value="4000"/>
+				<option key="--discretization" value="0.01"/>
+				<option key="--truncation-error" value="0.01"/>
+				<option key="--truncation-time-error" value="0.01"/>
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; deadlock under policy</formula>
+			<comment/>
+			<result outcome="failure" type="quality" timestamp="2024-01-29 14:02:51 +0100">
+				<option key="--search-order" value="0"/>
+				<option key="--statespace-consumption" value="1"/>
+				<option key="--diagnostic" value="0"/>
+				<option key="--backwards-order" value="1"/>
+				<option key="--priority-order" value="0"/>
+				<option key="--generate-strategy" value="2"/>
+				<option key="--extrapolation" value="0"/>
+				<option key="--hashtable-size" value="27"/>
+				<option key="--filter" value="0"/>
+				<option key="--learning-method" value="-1"/>
+				<option key="--good-runs" value="5"/>
+				<option key="--total-runs" value="5"/>
+				<option key="--runs-pr-state" value="5"/>
+				<option key="--eval-runs" value="5"/>
+				<option key="--max-iterations" value="30"/>
+				<option key="--max-imitation" value="5"/>
+				<option key="--reset-no-better" value="10"/>
+				<option key="--max-reset-learning" value="3"/>
+				<option key="--qlearning-alpha" value="2"/>
+				<option key="--split-upper-t" value="1.75"/>
+				<option key="--split-lower-t" value="0.15"/>
+				<option key="--split-ks" value="0.25"/>
+				<option key="--split-filter-rate" value="0.02"/>
+				<option key="--split-filter-val" value="0.99"/>
+				<option key="--discount" value="0.99"/>
+				<option key="--random-search-limit" value="0.5"/>
+				<option key="--deterministic-search-limit" value="0.5"/>
+				<option key="--indifference-scale" value="0.005"/>
+				<option key="--indifference-smoothing" value="10"/>
+				<option key="--lower-delta" value="0.01"/>
+				<option key="--upper-delta" value="0.01"/>
+				<option key="--alpha" value="0.05"/>
+				<option key="--beta" value="0.05"/>
+				<option key="--epsilon" value="0.05"/>
+				<option key="--u0" value="0.9"/>
+				<option key="--u1" value="1.1"/>
+				<option key="--histogram-bar-width" value="0.0"/>
+				<option key="--histogram-bar-count" value="0"/>
+				<option key="--resolution" value="4000"/>
+				<option key="--discretization" value="0.01"/>
+				<option key="--truncation-error" value="0.01"/>
+				<option key="--truncation-time-error" value="0.01"/>
+			</result>
+		</query>
+		<query>
+			<formula>E&lt;&gt; Ron.Goal under policy</formula>
+			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-01-29 14:02:54 +0100">
+				<option key="--search-order" value="0"/>
+				<option key="--statespace-consumption" value="1"/>
+				<option key="--diagnostic" value="0"/>
+				<option key="--backwards-order" value="1"/>
+				<option key="--priority-order" value="0"/>
+				<option key="--generate-strategy" value="2"/>
+				<option key="--extrapolation" value="0"/>
+				<option key="--hashtable-size" value="27"/>
+				<option key="--filter" value="0"/>
+				<option key="--learning-method" value="-1"/>
+				<option key="--good-runs" value="5"/>
+				<option key="--total-runs" value="5"/>
+				<option key="--runs-pr-state" value="5"/>
+				<option key="--eval-runs" value="5"/>
+				<option key="--max-iterations" value="30"/>
+				<option key="--max-imitation" value="5"/>
+				<option key="--reset-no-better" value="10"/>
+				<option key="--max-reset-learning" value="3"/>
+				<option key="--qlearning-alpha" value="2"/>
+				<option key="--split-upper-t" value="1.75"/>
+				<option key="--split-lower-t" value="0.15"/>
+				<option key="--split-ks" value="0.25"/>
+				<option key="--split-filter-rate" value="0.02"/>
+				<option key="--split-filter-val" value="0.99"/>
+				<option key="--discount" value="0.99"/>
+				<option key="--random-search-limit" value="0.5"/>
+				<option key="--deterministic-search-limit" value="0.5"/>
+				<option key="--indifference-scale" value="0.005"/>
+				<option key="--indifference-smoothing" value="10"/>
+				<option key="--lower-delta" value="0.01"/>
+				<option key="--upper-delta" value="0.01"/>
+				<option key="--alpha" value="0.05"/>
+				<option key="--beta" value="0.05"/>
+				<option key="--epsilon" value="0.05"/>
+				<option key="--u0" value="0.9"/>
+				<option key="--u1" value="1.1"/>
+				<option key="--histogram-bar-width" value="0.0"/>
+				<option key="--histogram-bar-count" value="0"/>
+				<option key="--resolution" value="4000"/>
+				<option key="--discretization" value="0.01"/>
+				<option key="--truncation-error" value="0.01"/>
+				<option key="--truncation-time-error" value="0.01"/>
+			</result>
+		</query>
+		<query>
+			<formula>Pr[&lt;=10](&lt;&gt; Ron.Goal) under policy </formula>
+			<comment/>
+			<result outcome="success" type="interval" value="[0.950056,1] (95% CI)" timestamp="2024-01-29 13:59:25 +0100">
+				<option key="--search-order" value="0"/>
+				<option key="--statespace-consumption" value="1"/>
+				<option key="--diagnostic" value="0"/>
+				<option key="--backwards-order" value="1"/>
+				<option key="--priority-order" value="0"/>
+				<option key="--generate-strategy" value="2"/>
+				<option key="--extrapolation" value="0"/>
+				<option key="--hashtable-size" value="27"/>
+				<option key="--filter" value="0"/>
+				<option key="--learning-method" value="-1"/>
+				<option key="--good-runs" value="5"/>
+				<option key="--total-runs" value="5"/>
+				<option key="--runs-pr-state" value="5"/>
+				<option key="--eval-runs" value="5"/>
+				<option key="--max-iterations" value="30"/>
+				<option key="--max-imitation" value="5"/>
+				<option key="--reset-no-better" value="10"/>
+				<option key="--max-reset-learning" value="3"/>
+				<option key="--qlearning-alpha" value="2"/>
+				<option key="--split-upper-t" value="1.75"/>
+				<option key="--split-lower-t" value="0.15"/>
+				<option key="--split-ks" value="0.25"/>
+				<option key="--split-filter-rate" value="0.02"/>
+				<option key="--split-filter-val" value="0.99"/>
+				<option key="--discount" value="0.99"/>
+				<option key="--random-search-limit" value="0.5"/>
+				<option key="--deterministic-search-limit" value="0.5"/>
+				<option key="--indifference-scale" value="0.005"/>
+				<option key="--indifference-smoothing" value="10"/>
+				<option key="--lower-delta" value="0.01"/>
+				<option key="--upper-delta" value="0.01"/>
+				<option key="--alpha" value="0.05"/>
+				<option key="--beta" value="0.05"/>
+				<option key="--epsilon" value="0.05"/>
+				<option key="--u0" value="0.9"/>
+				<option key="--u1" value="1.1"/>
+				<option key="--histogram-bar-width" value="0.0"/>
+				<option key="--histogram-bar-count" value="0"/>
+				<option key="--resolution" value="4000"/>
+				<option key="--discretization" value="0.01"/>
+				<option key="--truncation-error" value="0.01"/>
+				<option key="--truncation-time-error" value="0.01"/>
+				<details>[0.950056,1] (95% CI)</details>
+				<plot title="Probability Density Distribution" xaxis="run duration in time" yaxis="probability density">
+					<series title="density" type="b(0.555556)" color="0x0000ff" encoding="csv">1.0,1.4
+1.555555555555556,0.25
+2.111111111111111,0.0
+2.666666666666667,0.125
+3.222222222222222,0.0
+3.777777777777778,0.0
+4.333333333333334,0.0
+4.888888888888889,0.0
+5.444444444444445,0.0
+6.0,0.025
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">1.347222222222222,0.0
+1.347222222222222,1.4
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.55556, bucket count=10
+Runs: 72 in total, 72 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [1, 6]
+Mean estimate of displayed sample: 1.347 ± 0.1898 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Density Confidence Intervals" xaxis="run duration in time" yaxis="probability density">
+					<series title="upper limit" type="b(0.555556)" color="0xa0a0ff" encoding="csv">1.0,0.8673176152121594
+1.555555555555556,0.2406259325030243
+2.111111111111111,0.04994408370585468
+2.666666666666667,0.1546673148161231
+3.222222222222222,0.04994408370585468
+3.777777777777778,0.04994408370585468
+4.333333333333334,0.04994408370585468
+4.888888888888889,0.04994408370585468
+5.444444444444445,0.04994408370585468
+6.0,0.07497131085391912
+					</series>
+					<series title="lower limit" type="b(0.555556)" color="0x0000ff" encoding="csv">1.0,0.6643633721453073
+1.555555555555556,0.06866420769681664
+2.111111111111111,0.0
+2.666666666666667,0.02293165915374548
+3.222222222222222,0.0
+3.777777777777778,0.0
+4.333333333333334,0.0
+4.888888888888889,0.0
+5.444444444444445,0.0
+6.0,3.515744052335976E-4
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">1.347222222222222,0.0
+1.347222222222222,1.561171707381887
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.55556, bucket count=10
+Runs: 72 in total, 72 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [1, 6]
+Mean estimate of displayed sample: 1.347 ± 0.1898 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Distribution" xaxis="run duration in time" yaxis="probability">
+					<series title="probability" type="b(0.555556)" color="0x0000ff" encoding="csv">1.0,0.7777777777777778
+1.555555555555556,0.1388888888888889
+2.111111111111111,0.0
+2.666666666666667,0.06944444444444445
+3.222222222222222,0.0
+3.777777777777778,0.0
+4.333333333333334,0.0
+4.888888888888889,0.0
+5.444444444444445,0.0
+6.0,0.01388888888888889
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">1.347222222222222,0.0
+1.347222222222222,0.7777777777777778
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.55556, bucket count=10
+Runs: 72 in total, 72 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [1, 6]
+Mean estimate of displayed sample: 1.347 ± 0.1898 (95% CI)</comment>
+				</plot>
+				<plot title="Probability Confidence Intervals" xaxis="run duration in time" yaxis="probability">
+					<series title="upper limit" type="b(0.555556)" color="0xa0a0ff" encoding="csv">1.0,0.8673176152121594
+1.555555555555556,0.2406259325030243
+2.111111111111111,0.04994408370585468
+2.666666666666667,0.1546673148161231
+3.222222222222222,0.04994408370585468
+3.777777777777778,0.04994408370585468
+4.333333333333334,0.04994408370585468
+4.888888888888889,0.04994408370585468
+5.444444444444445,0.04994408370585468
+6.0,0.07497131085391912
+					</series>
+					<series title="lower limit" type="b(0.555556)" color="0x0000ff" encoding="csv">1.0,0.6643633721453073
+1.555555555555556,0.06866420769681664
+2.111111111111111,0.0
+2.666666666666667,0.02293165915374548
+3.222222222222222,0.0
+3.777777777777778,0.0
+4.333333333333334,0.0
+4.888888888888889,0.0
+5.444444444444445,0.0
+6.0,3.515744052335976E-4
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">1.347222222222222,0.0
+1.347222222222222,0.8673176152121594
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.55556, bucket count=10
+Runs: 72 in total, 72 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [1, 6]
+Mean estimate of displayed sample: 1.347 ± 0.1898 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Distribution" xaxis="run duration in time" yaxis="probability">
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">1.0,0.0
+1.555555555555556,0.7777777777777778
+2.111111111111111,0.9166666666666666
+2.666666666666667,0.9166666666666666
+3.222222222222222,0.9861111111111112
+3.777777777777778,0.9861111111111112
+4.333333333333334,0.9861111111111112
+4.888888888888889,0.9861111111111112
+5.444444444444445,0.9861111111111112
+6.0,0.9861111111111112
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">1.347222222222222,0.0
+1.347222222222222,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.55556, bucket count=10
+Runs: 72 in total, 72 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [1, 6]
+Mean estimate of displayed sample: 1.347 ± 0.1898 (95% CI)</comment>
+				</plot>
+				<plot title="Cumulative Probability Confidence Intervals" xaxis="run duration in time" yaxis="probability">
+					<series title="upper limit" type="k" color="0x0000dd" encoding="csv">1.0,0.04994408370585468
+1.555555555555556,0.8673176152121594
+2.111111111111111,0.9688024908586155
+2.666666666666667,0.9688024908586155
+3.222222222222222,0.9996484255947664
+3.777777777777778,0.9996484255947664
+4.333333333333334,0.9996484255947664
+4.888888888888889,0.9996484255947664
+5.444444444444445,0.9996484255947664
+6.0,0.9996484255947664
+					</series>
+					<series title="upper limit" type="k" color="0xdd0000" encoding="csv">1.0,0.0
+1.555555555555556,0.6643633721453073
+2.111111111111111,0.827391415316326
+2.666666666666667,0.827391415316326
+3.222222222222222,0.9250286891460808
+3.777777777777778,0.9250286891460808
+4.333333333333334,0.9250286891460808
+4.888888888888889,0.9250286891460808
+5.444444444444445,0.9250286891460808
+6.0,0.9250286891460808
+					</series>
+					<series title="cumulative" type="l" color="0x000000" encoding="csv">1.0,0.0
+1.555555555555556,0.7777777777777778
+2.111111111111111,0.9166666666666666
+2.666666666666667,0.9166666666666666
+3.222222222222222,0.9861111111111112
+3.777777777777778,0.9861111111111112
+4.333333333333334,0.9861111111111112
+4.888888888888889,0.9861111111111112
+5.444444444444445,0.9861111111111112
+6.0,0.9861111111111112
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">1.347222222222222,0.0
+1.347222222222222,1.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.55556, bucket count=10
+Runs: 72 in total, 72 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [1, 6]
+Mean estimate of displayed sample: 1.347 ± 0.1898 (95% CI)</comment>
+				</plot>
+				<plot title="Frequency Histogram" xaxis="run duration in time" yaxis="count">
+					<series title="count" type="b(0.555556)" color="0x0000ff" encoding="csv">1.0,56.0
+1.555555555555556,10.0
+2.111111111111111,0.0
+2.666666666666667,5.0
+3.222222222222222,0.0
+3.777777777777778,0.0
+4.333333333333334,0.0
+4.888888888888889,0.0
+5.444444444444445,0.0
+6.0,1.0
+					</series>
+					<series title="average" type="pl" color="0x00dd00" encoding="csv">1.347222222222222,0.0
+1.347222222222222,56.0
+					</series>
+					<comment>Parameters: α=0.05, ε=0.05, bucket width=0.55556, bucket count=10
+Runs: 72 in total, 72 (100%) displayed, 0 (0%) remaining
+Span of displayed sample: [1, 6]
+Mean estimate of displayed sample: 1.347 ± 0.1898 (95% CI)</comment>
+				</plot>
+			</result>
+		</query>
+	</queries>
+</nta>

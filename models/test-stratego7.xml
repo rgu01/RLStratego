@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE nta PUBLIC '-//Uppaal Team//DTD Flat System 1.1//EN' 'http://www.it.uu.se/research/group/darts/uppaal/flat-1_2.dtd'>
+<nta>
+	<declaration>// Place global declarations here.
+int gate = 0;
+int reward = 0;
+int penalty = 0;
+
+clock time;</declaration>
+	<template>
+		<name x="5" y="5">Maze</name>
+		<declaration>// Place local declarations here.
+clock t;
+
+void reset(){
+    t = 0;
+    reward = 0;
+    penalty = 0;
+}
+</declaration>
+		<location id="id0" x="136" y="34">
+			<name x="144" y="8">E2</name>
+			<urgent/>
+		</location>
+		<location id="id1" x="136" y="0">
+			<name x="144" y="-25">Goal</name>
+			<urgent/>
+		</location>
+		<location id="id2" x="136" y="-34">
+			<name x="144" y="-59">E1</name>
+			<urgent/>
+		</location>
+		<location id="id3" x="-102" y="0">
+			<name x="-112" y="-34">S1</name>
+			<label kind="invariant" x="-112" y="17">t&lt;=1</label>
+		</location>
+		<location id="id4" x="-340" y="0">
+			<name x="-365" y="-25">DM</name>
+			<urgent/>
+		</location>
+		<init ref="id4"/>
+		<transition controllable="false">
+			<source ref="id1"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="-357" y="-127">reward=10</label>
+			<nail x="204" y="0"/>
+			<nail x="204" y="-102"/>
+			<nail x="-374" y="-102"/>
+			<nail x="-374" y="0"/>
+		</transition>
+		<transition controllable="false">
+			<source ref="id0"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="-340" y="68">penalty=10</label>
+			<nail x="170" y="34"/>
+			<nail x="170" y="68"/>
+			<nail x="-340" y="68"/>
+		</transition>
+		<transition controllable="false">
+			<source ref="id2"/>
+			<target ref="id4"/>
+			<label kind="assignment" x="-340" y="-85">penalty=10</label>
+			<nail x="170" y="-34"/>
+			<nail x="170" y="-68"/>
+			<nail x="-340" y="-68"/>
+		</transition>
+		<transition controllable="false">
+			<source ref="id3"/>
+			<target ref="id0"/>
+			<label kind="guard" x="-59" y="8">gate==3&amp;&amp;t&gt;=1</label>
+			<nail x="-68" y="34"/>
+		</transition>
+		<transition controllable="false">
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="guard" x="-59" y="-25">gate==2&amp;&amp;t&gt;=1</label>
+		</transition>
+		<transition controllable="false">
+			<source ref="id3"/>
+			<target ref="id2"/>
+			<label kind="guard" x="-59" y="-59">gate==1&amp;&amp;t&gt;=1</label>
+			<nail x="-68" y="-34"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="assignment" x="-280" y="8">gate=3,reset()</label>
+			<nail x="-306" y="34"/>
+			<nail x="-136" y="34"/>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="assignment" x="-280" y="-25">gate=2,reset()</label>
+		</transition>
+		<transition>
+			<source ref="id4"/>
+			<target ref="id3"/>
+			<label kind="assignment" x="-280" y="-59">gate=1,reset()</label>
+			<nail x="-306" y="-34"/>
+			<nail x="-136" y="-34"/>
+		</transition>
+	</template>
+	<system>// Place template instantiations here.
+Ron = Maze();
+// List one or more processes to be composed into a system.
+system Ron;
+</system>
+	<queries>
+		<query>
+			<formula>strategy policy = maxE(reward - penalty)[&amp;lt;=10]{Ron.location,gate}-&amp;gt;{}:&amp;lt;&amp;gt; time&amp;gt;=10</formula>
+			<comment></comment>
+		</query>
+	</queries>
+</nta>
