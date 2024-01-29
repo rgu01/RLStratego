@@ -12,16 +12,16 @@ CND_ARTIFACT_DIR_Debug=dist/Debug/GNU-Linux
 CND_ARTIFACT_NAME_Debug=learning_library_stratego.so
 CND_ARTIFACT_PATH_Debug=dist/Debug/GNU-Linux/learning_library_stratego.so
 CND_PACKAGE_DIR_Debug=dist/Debug/GNU-Linux/package
-CND_PACKAGE_NAME_Debug=liblearninglibrarystratego.so.tar
-CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/liblearninglibrarystratego.so.tar
+CND_PACKAGE_NAME_Debug=libRLStratego.so.tar
+CND_PACKAGE_PATH_Debug=dist/Debug/GNU-Linux/package/libRLStratego.so.tar
 # Release configuration
 CND_PLATFORM_Release=GNU-Linux
 CND_ARTIFACT_DIR_Release=dist/Release/GNU-Linux
-CND_ARTIFACT_NAME_Release=liblearning_library_stratego.so
-CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/liblearning_library_stratego.so
+CND_ARTIFACT_NAME_Release=libRLStratego.so
+CND_ARTIFACT_PATH_Release=dist/Release/GNU-Linux/libRLStratego.so
 CND_PACKAGE_DIR_Release=dist/Release/GNU-Linux/package
-CND_PACKAGE_NAME_Release=liblearninglibrarystratego.so.tar
-CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/liblearninglibrarystratego.so.tar
+CND_PACKAGE_NAME_Release=libRLStratego.so.tar
+CND_PACKAGE_PATH_Release=dist/Release/GNU-Linux/package/libRLStratego.so.tar
 #
 # include compiler specific variables
 #

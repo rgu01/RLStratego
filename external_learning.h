@@ -15,6 +15,7 @@
 #define EXTERNAL_LEARNING_H
 
 #define CEG
+#define COMPACT
 
 #include <iostream>
 #include <cassert>
@@ -42,17 +43,18 @@
 class QLearner {
 private:
 
+    const double min_reward = -32767.0;
     /**
      * Struct for handling the Q-value update
      */
     struct qvalue_t {
         double _value = 0;
         size_t _count = 0;
-        double min_reward = 32768;
 #ifdef ANALYSE
         std::map<double, int> reward_list;
 #endif
         bool _select = false;
+        bool _uncover = false;
     };
     size_t count = 0;
     // type for mapping actions to values
@@ -74,7 +76,7 @@ public:
     bool learning = true;
     
     //uncovered states
-    std::vector<qstate_t> uncovered;
+    //qtable_t uncovered;
 
 public:
 
@@ -183,6 +185,21 @@ public:
         }
         q._count += 1;
     }
+    
+     /**
+     * Add a state-action pair uncovered by learning.
+     * @param d_vars discrete values of current state
+     * @param c_vars continuous values of current state
+     * @param action action used
+     */
+    void add_uncovered(double* d_vars, double* c_vars, size_t action) {
+        auto from_state = make_state(d_vars, c_vars);
+        qvalue_t& q = _Q[from_state][action];
+        q._count = 1;
+        q._select = false;
+        q._value = min_reward;
+        q._uncover = true;
+    }
 
     /**
      * Returns the statistics of the "mapped state", namely the range of the q-values 
@@ -267,16 +284,21 @@ public:
         qvalue_t best_v = best_value(d_vars, c_vars);
 
         assert(current_v._count == 0 || best_v._count != 0);
-
-        if (current_v._count > 0 && current_v._value == best_v._value) {
-            return true;
-        } else if (best_v._count == 0) {
-            // if the current state and action is not found, 
-            // then the action is allowed for exploration
-            // return true;
-            // if the current state and action is not found,
-            // then the action is not allowed
-            *found = false;
+        
+        if(current_v._uncover) {
+            return false;
+        }
+        else {
+            if (current_v._count > 0 && current_v._value == best_v._value) {
+                return true;
+            } else if (best_v._count == 0) {
+                // if the current state and action is not found, 
+                // then the action is allowed for exploration
+                // return true;
+                // if the current state and action is not found,
+                // then the action is not allowed
+                *found = false;
+            }
         }
 
         return false;
@@ -295,7 +317,7 @@ public:
         _Q.clear();
     }
     
-    void print_complete_strategy(std::ostream& out) {
+    void print_complete_score_table(std::ostream& out) {
         bool first = true;
         out << "{\n";
         for (auto& state_action : _Q) {
@@ -329,20 +351,24 @@ public:
         out << "\n}";
     }
 
-    void print_compact_strategy(std::ostream& out) {
+    void print_partial_score_table(std::ostream& out, bool compact, bool uncovered) {
         bool first = true;
-        bool select = false;
+        bool tag = false;
+        
         out << "{\n";
         for (auto& state_action : _Q) {
-            select = false;
+            tag = false;
             auto& state = state_action.first;
             auto& action_map = state_action.second;
             for (auto& action_value : action_map) {
-                if (action_value.second._select) {
-                    select = true;
+                if (compact && action_value.second._select) {
+                    tag = true;
+                }
+                if (uncovered && action_value.second._uncover) {
+                    tag = true;
                 }
             }
-            if (select) {
+            if (tag) {
                 if (!first) out << ",\n"; // make json-friendly
                 first = false;
                 out << "\"(";
@@ -358,12 +384,18 @@ public:
                 out << "]\":{";
                 bool first_action = true;
                 for (auto& action_value : action_map) {
-                    if (action_value.second._select) {
+                    if (compact && action_value.second._select) {
                         if (!first_action) out << ",";
                         first_action = false;
                         out << "\n\t";
                         //action_value.first is the action ID.
                         //action_value.second is the value of the state-action pair, and the count of it.
+                        out << "\"" << action_value.first << "\":" << action_value.second._value;
+                    }
+                    if (uncovered && action_value.second._uncover) {
+                        if (!first_action) out << ",";
+                        first_action = false;
+                        out << "\n\t";
                         out << "\"" << action_value.first << "\":" << action_value.second._value;
                     }
                 }
@@ -372,7 +404,7 @@ public:
         }
         out << "\n}";
     }
-
+        
     /**
      * Outputs the learned q-values to the string-stream in a json-friendly format
      * of a map over "(discrete,continuous)"-state variable vector pairs and
@@ -382,14 +414,18 @@ public:
     void print(std::ostream& out = std::cerr) {
         if (learning) {
             learning = false;
-            this->print_complete_strategy(out);
+            this->print_complete_score_table(out);
         } else {
-#ifdef COMPACT
-            this->print_compact_strategy(out);
-#endif
-#ifndef COMPACT
-            this->print_complete_strategy(out);
-#endif
+            #if defined(COMPACT) && !defined(CEG) 
+                this->print_partial_score_table(out, true, false);
+            #endif
+            #if !defined(COMPACT) && !defined(CEG) 
+                this->print_partial_score_table(out, true, false);
+            #endif
+            
+            #if defined(CEG) 
+                this->print_partial_score_table(out, false, true);
+            #endif
         }
     }
 

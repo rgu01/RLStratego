@@ -80,15 +80,11 @@ extern "C" void* uppaal_external_learner_parse(const char* data, bool is_min, si
 extern "C" char* uppaal_external_learner_print(void* object) {
     std::stringstream outstream;
     QLearner* ql = (QLearner*) object;
-#ifndef ANALYSE
-    ql->print(outstream); // ask learning object to be printed to a stream
-#endif
-#ifdef ANALYSE
-    ql->analyse_print(outstream);
-#endif
+    ql->print(outstream); 
     auto data = outstream.str(); // convert the stream into a regular string object
     char* tmp = new char[data.size() + 1]; // create a c-style string with enough space
     strcpy(tmp, data.c_str()); // copy over the data
+    
     return tmp; // deallocation is handled by the caller
 }
 
@@ -171,11 +167,11 @@ extern "C" double uppaal_external_learner_predict(void* object, bool is_eval, si
              * that the state is not found in the strategy so that
              * the verification stops as if meeting a deadlock
             */
-            if (!q->learning) {    
-                if(std::find(q->uncovered.begin(), q->uncovered.end(), from_state) == q->uncovered.end()){
-                    q->uncovered.push_back(from_state);
-                    std::cerr << "State <" << from_state.first[0] << "," << from_state.first[1] << "> is not found! \n";
-                }
+            //std::cerr << q->learning;
+            if (!q->learning) { 
+                q->add_uncovered(d_vars, c_vars, action);
+                std::cerr << "State-action pair (<" << from_state.first[0] << "," 
+                          << from_state.first[1] << ">," << action << ") is not found! \n";
                 //assert(false);
             }
             reward = 0.0;

@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=learning_library_stratego
+PROJECTNAME=RLStratego
 
 # Active Configuration
 DEFAULTCONF=Debug
