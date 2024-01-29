@@ -25,7 +25,7 @@ extern "C" void* uppaal_external_learner_alloc(bool minimization, size_t d_size,
     std::cerr << " Compact Strategy Version.";
 #endif
 #ifdef CEG
-    std::cerr << " CEG Version.";
+    std::cerr << " CEG Version v1.0";
 #endif
     std::cerr << "\n";
     return object;
