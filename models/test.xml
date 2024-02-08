@@ -6,128 +6,140 @@ int gate = 0;
 int reward = 0;
 int penalty = 0;
 
+const int gmax = 999;
+const int gmin = 0;
+const int low = 2;
+const int up = 998;
+
 clock time;</declaration>
 	<template>
 		<name x="5" y="5">Maze</name>
 		<declaration>// Place local declarations here.
 clock t;
 </declaration>
-		<location id="id0" x="204" y="170" color="#ff0000">
-			<name x="194" y="136">E2</name>
+		<location id="id0" x="238" y="102" color="#ff0000">
+			<name x="228" y="68">E2</name>
 			<urgent/>
 		</location>
-		<location id="id1" x="204" y="0" color="#00ff00">
-			<name x="194" y="-34">Goal</name>
+		<location id="id1" x="238" y="-68" color="#00ff00">
+			<name x="228" y="-102">Goal</name>
 			<urgent/>
 		</location>
-		<location id="id2" x="204" y="-170" color="#ff0000">
-			<name x="194" y="-204">E1</name>
+		<location id="id2" x="238" y="-238" color="#ff0000">
+			<name x="228" y="-272">E1</name>
 			<urgent/>
 		</location>
-		<location id="id3" x="34" y="170">
-			<name x="24" y="136">S4</name>
-			<label kind="invariant" x="24" y="187">t&lt;=1</label>
+		<location id="id3" x="68" y="102">
+			<name x="58" y="68">S4</name>
+			<label kind="invariant" x="59" y="119">t&lt;=1</label>
 		</location>
-		<location id="id4" x="34" y="0">
-			<name x="24" y="-34">S3</name>
-			<label kind="invariant" x="24" y="17">t&lt;=1</label>
+		<location id="id4" x="68" y="-68">
+			<name x="58" y="-102">S3</name>
+			<label kind="invariant" x="58" y="-51">t&lt;=1</label>
 		</location>
-		<location id="id5" x="34" y="-170">
-			<name x="24" y="-204">S2</name>
-			<label kind="invariant" x="24" y="-153">t&lt;=1</label>
+		<location id="id5" x="68" y="-238">
+			<name x="58" y="-272">S2</name>
+			<label kind="invariant" x="58" y="-221">t&lt;=1</label>
 		</location>
-		<location id="id6" x="-136" y="0">
-			<name x="-146" y="-34">S1</name>
+		<location id="id6" x="-136" y="-68">
+			<name x="-146" y="-102">S1</name>
 			<urgent/>
 		</location>
-		<location id="id7" x="-340" y="0">
-			<name x="-374" y="-25">S0</name>
+		<location id="id7" x="-340" y="-68">
+			<name x="-374" y="-93">S0</name>
 			<urgent/>
 		</location>
-		<location id="id8" x="-442" y="0">
-			<name x="-459" y="-34">Start</name>
-			<urgent/>
-		</location>
-		<init ref="id8"/>
+		<branchpoint id="id8" x="-238" y="-68"/>
+		<init ref="id7"/>
 		<transition id="id9">
 			<source ref="id8"/>
-			<target ref="id7"/>
+			<target ref="id6"/>
+			<label kind="select" x="-255" y="8">i:int[low,gmax]</label>
+			<label kind="assignment" x="-255" y="-42">gate=i</label>
+			<label kind="probability" x="-255" y="-17">100</label>
+			<nail x="-187" y="-34"/>
 		</transition>
-		<transition id="id10" controllable="false">
-			<source ref="id1"/>
-			<target ref="id7"/>
-			<label kind="assignment" x="-322" y="238">reward=10,t=0</label>
-			<nail x="238" y="0"/>
-			<nail x="238" y="238"/>
-			<nail x="-340" y="238"/>
+		<transition id="id10">
+			<source ref="id8"/>
+			<target ref="id6"/>
+			<label kind="select" x="-255" y="-144">i:int[gmin,low]</label>
+			<label kind="assignment" x="-255" y="-110">gate=i</label>
+			<label kind="probability" x="-255" y="-127">1</label>
+			<nail x="-187" y="-102"/>
 		</transition>
 		<transition id="id11" controllable="false">
-			<source ref="id0"/>
-			<target ref="id7"/>
-			<label kind="assignment" x="-322" y="204">penalty=10,t=0</label>
-			<nail x="204" y="204"/>
-			<nail x="-340" y="204"/>
+			<source ref="id7"/>
+			<target ref="id8"/>
 		</transition>
 		<transition id="id12" controllable="false">
-			<source ref="id2"/>
+			<source ref="id1"/>
 			<target ref="id7"/>
-			<label kind="assignment" x="-322" y="-238">penalty=10,t=0</label>
-			<nail x="204" y="-238"/>
-			<nail x="-340" y="-238"/>
+			<label kind="assignment" x="-322" y="204">reward=10,t=0</label>
+			<nail x="272" y="-68"/>
+			<nail x="272" y="204"/>
+			<nail x="-340" y="204"/>
 		</transition>
 		<transition id="id13" controllable="false">
-			<source ref="id3"/>
-			<target ref="id0"/>
-			<label kind="guard" x="51" y="144">t&gt;=1</label>
+			<source ref="id0"/>
+			<target ref="id7"/>
+			<label kind="assignment" x="-322" y="170">penalty=10,t=0</label>
+			<nail x="238" y="170"/>
+			<nail x="-340" y="170"/>
 		</transition>
 		<transition id="id14" controllable="false">
-			<source ref="id5"/>
-			<target ref="id1"/>
-			<label kind="guard" x="51" y="-102">t&gt;=1</label>
+			<source ref="id2"/>
+			<target ref="id7"/>
+			<label kind="assignment" x="-322" y="-306">penalty=10,t=0</label>
+			<nail x="238" y="-306"/>
+			<nail x="-340" y="-306"/>
 		</transition>
 		<transition id="id15" controllable="false">
 			<source ref="id3"/>
-			<target ref="id1"/>
-			<label kind="guard" x="51" y="68">t&gt;=1</label>
+			<target ref="id0"/>
+			<label kind="guard" x="85" y="76">t&gt;=1</label>
 		</transition>
 		<transition id="id16" controllable="false">
-			<source ref="id4"/>
+			<source ref="id5"/>
 			<target ref="id1"/>
-			<label kind="guard" x="51" y="-25">t&gt;=1</label>
+			<label kind="guard" x="85" y="-170">t&gt;=1</label>
 		</transition>
 		<transition id="id17" controllable="false">
+			<source ref="id3"/>
+			<target ref="id1"/>
+			<label kind="guard" x="85" y="0">t&gt;=1</label>
+		</transition>
+		<transition id="id18" controllable="false">
+			<source ref="id4"/>
+			<target ref="id1"/>
+			<label kind="guard" x="85" y="-93">t&gt;=1</label>
+		</transition>
+		<transition id="id19" controllable="false">
 			<source ref="id5"/>
 			<target ref="id2"/>
-			<label kind="guard" x="51" y="-195">t&gt;=1</label>
-		</transition>
-		<transition id="id18">
-			<source ref="id6"/>
-			<target ref="id3"/>
-			<label kind="guard" x="-68" y="76">gate&gt;50&amp;&amp;
-gate&lt;=100</label>
-			<label kind="assignment" x="-68" y="119">reward=0,
-penalty=0</label>
-		</transition>
-		<transition id="id19">
-			<source ref="id6"/>
-			<target ref="id4"/>
-			<label kind="guard" x="-68" y="-42">gate&gt;=2&amp;&amp;
-gate&lt;=60</label>
-			<label kind="assignment" x="-68" y="0">reward=0,
-penalty=0</label>
+			<label kind="guard" x="85" y="-263">t&gt;=1</label>
 		</transition>
 		<transition id="id20">
 			<source ref="id6"/>
-			<target ref="id5"/>
-			<label kind="guard" x="-68" y="-136">gate&lt;=2</label>
-			<label kind="assignment" x="-68" y="-119">reward=0,
+			<target ref="id3"/>
+			<label kind="guard" x="-68" y="8">gate&gt;up&amp;
+gate&lt;=gmax</label>
+			<label kind="assignment" x="-68" y="51">reward=0,
 penalty=0</label>
 		</transition>
-		<transition id="id21" controllable="false">
-			<source ref="id7"/>
-			<target ref="id6"/>
-			<label kind="select" x="-314" y="-51">i:int[0,100]</label>
-			<label kind="assignment" x="-314" y="-25">gate=i</label>
+		<transition id="id21">
+			<source ref="id6"/>
+			<target ref="id4"/>
+			<label kind="guard" x="-68" y="-110">gate&gt;=gmin&amp;&amp;
+gate&lt;=gmax</label>
+			<label kind="assignment" x="-68" y="-68">reward=0,
+penalty=0</label>
+		</transition>
+		<transition id="id22">
+			<source ref="id6"/>
+			<target ref="id5"/>
+			<label kind="guard" x="-68" y="-204">gate&lt;=low</label>
+			<label kind="assignment" x="-68" y="-187">reward=0,
+penalty=0</label>
 		</transition>
 	</template>
 	<system>// Place template instantiations here.
@@ -145,13 +157,6 @@ system Ron;
 			<formula>strategy policy = maxE(reward - penalty)[&lt;=10]{Ron.location,gate}-&gt;{}:&lt;&gt; time&gt;=10
 </formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2024-01-29 15:58:47 +0100">
-				<option key="--total-runs" value="10"/>
-				<option key="--learning-method" value="-1"/>
-				<option key="--good-runs" value="5"/>
-				<option key="--eval-runs" value="5"/>
-				<option key="--runs-pr-state" value="5"/>
-			</result>
 		</query>
 		<query>
 			<formula>saveStrategy("/home/rgu01/UPPAAL/strategies/policy.out", policy)</formula>
@@ -166,15 +171,8 @@ system Ron;
 			</result>
 		</query>
 		<query>
-			<formula>A[] gate&gt;=0 &amp;&amp; gate&lt;=100 under policy</formula>
+			<formula>A[] gate&gt;=gmin &amp;&amp; gate&lt;=gmax under policy</formula>
 			<comment>A[] gate&gt;=0 &amp;&amp; gate&lt;=100 under policy</comment>
-			<result outcome="success" type="quality" timestamp="2024-01-29 15:22:33 +0100">
-				<option key="--total-runs" value="10"/>
-				<option key="--learning-method" value="-1"/>
-				<option key="--good-runs" value="5"/>
-				<option key="--eval-runs" value="5"/>
-				<option key="--runs-pr-state" value="5"/>
-			</result>
 		</query>
 		<query>
 			<formula>saveStrategy("/home/rgu01/UPPAAL/strategies/uncovered.out", policy)</formula>

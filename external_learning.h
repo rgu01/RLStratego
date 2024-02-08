@@ -15,7 +15,7 @@
 #define EXTERNAL_LEARNING_H
 
 #define CEG
-#define COMPACT
+//#define COMPACT
 
 #include <iostream>
 #include <cassert>
