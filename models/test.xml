@@ -149,34 +149,43 @@ system Ron;
 </system>
 	<queries>
 		<option key="--total-runs" value="10"/>
-		<option key="--learning-method" value="-1"/>
 		<option key="--good-runs" value="5"/>
 		<option key="--eval-runs" value="5"/>
 		<option key="--runs-pr-state" value="5"/>
 		<query>
-			<formula>strategy policy = maxE(reward - penalty)[&lt;=10]{Ron.location,gate}-&gt;{}:&lt;&gt; time&gt;=10
+			<formula>strategy policy = maxE(reward - penalty)[&lt;=12]{Ron.location,gate}-&gt;{}:&lt;&gt; time&gt;=12
 </formula>
 			<comment/>
 		</query>
 		<query>
-			<formula>saveStrategy("/home/rgu01/UPPAAL/strategies/policy.out", policy)</formula>
+			<formula>saveStrategy("/home/ron/Github/RLStratego/Strategies/policy.out", policy)</formula>
 			<comment/>
-			<result outcome="success" type="quality" timestamp="2024-01-29 14:53:53 +0100">
+			<result outcome="success" type="quality" timestamp="2024-02-29 23:52:16 +0100">
 				<option key="--total-runs" value="10"/>
-				<option key="--learning-method" value="-1"/>
 				<option key="--good-runs" value="5"/>
 				<option key="--eval-runs" value="5"/>
 				<option key="--runs-pr-state" value="5"/>
-				<option key="--diagnostic" value="0"/>
 			</result>
 		</query>
 		<query>
 			<formula>A[] gate&gt;=gmin &amp;&amp; gate&lt;=gmax under policy</formula>
 			<comment>A[] gate&gt;=0 &amp;&amp; gate&lt;=100 under policy</comment>
+			<result outcome="success" type="quality" timestamp="2024-02-29 23:52:19 +0100">
+				<option key="--total-runs" value="10"/>
+				<option key="--good-runs" value="5"/>
+				<option key="--eval-runs" value="5"/>
+				<option key="--runs-pr-state" value="5"/>
+			</result>
 		</query>
 		<query>
-			<formula>saveStrategy("/home/rgu01/UPPAAL/strategies/uncovered.out", policy)</formula>
+			<formula>saveStrategy("/home/ron/Github/RLStratego/Strategies/uncovered.out", policy)</formula>
 			<comment/>
+			<result outcome="success" type="quality" timestamp="2024-02-29 23:52:21 +0100">
+				<option key="--total-runs" value="10"/>
+				<option key="--good-runs" value="5"/>
+				<option key="--eval-runs" value="5"/>
+				<option key="--runs-pr-state" value="5"/>
+			</result>
 		</query>
 		<query>
 			<formula>//load strategies</formula>

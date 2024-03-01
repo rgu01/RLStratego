@@ -1,0 +1,31 @@
+{"version":1.0,"type":"state->regressor","representation":"map","actions":{
+		"0":"Ron.S1->Ron.S4 { gate > up & gate <= gmax, tau, reward := 0, penalty := 0 }",
+		"1":"Ron.S1->Ron.S3 { gate >= gmin && gate <= gmax, tau, reward := 0, penalty := 0 }",
+		"2":"Ron.S1->Ron.S2 { gate <= low, tau, reward := 0, penalty := 0 }",
+		"3":"WAIT"
+	},"statevars":[
+		"Ron.location",
+		"gate"
+	],"pointvars":[
+	],"locationnames":{
+		"Ron.location":{
+			"0":"E2",
+			"1":"Goal",
+			"2":"E1",
+			"3":"S4",
+			"4":"S3",
+			"5":"S2",
+			"6":"S1",
+			"7":"S0"
+		}
+	},"regressors":{{
+"(6,2,),[]":{
+	"1":-10,
+	"2":-10},
+"(6,999,),[]":{
+	"0":-10,
+	"1":-10}
+}
+
+	}
+}
